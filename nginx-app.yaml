@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-app
+  name: nginx-app
+  namespace: webapp
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nginx-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - image: docker.io/nginx:latest
+        name: nginx
+        resources: {}
+        ports:
+         - containerPort: 80
+        volumeMounts:
+         - mountPath: /etc/nginx/conf.d
+           name: nginx-config
+      - image: api_server
+        imagePullPolicy: Never
+        name: api
+        resources: {}
+        ports:
+         - containerPort: 5000
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: flask-nginx
+      
+
+status: {}
